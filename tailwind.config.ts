@@ -12,10 +12,6 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
-      fontFamily: {
-        jost: ['Jost', 'sans-serif'],
-        cinzel: ['Cinzel', 'sans-serif'],
-      },
     },
   },
   plugins: [],
