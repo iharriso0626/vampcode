@@ -1,10 +1,16 @@
+import Image from 'next/image';
+import Logo from '../Images/Logo.svg';
+
 export default function Home() {
   return (
     <div className="flex h-screen w-screen bg-[#0C0004] text-white overflow-hidden">
       {/* LEFT SECTION */}
-      <div className="relative w-[35%] h-full px-8 py-12 overflow-hidden border-2 border-white items-center">
+      <div className="relative w-[35%] h-full px-8 py-12 overflow-hidden  items-center">
+
+      <Image src={Logo} alt={'Logo'} className='w-36 h-36 border-2 border-[#670A0D] rounded-xl'/>
+
         {/* Main info */}
-        <h2 className="text-2xl mb-6 mt-[50%] ml-[20%] font-semibold uppercase tracking-wider">
+        <h2 className="text-2xl mb-6 mt-[30%] ml-[20%] font-semibold uppercase tracking-wider">
           Ian Harrison
         </h2>
         <p className="text-lg ml-[20%]">
@@ -26,7 +32,7 @@ export default function Home() {
           <h1 className="text-[150px] md:text-[200px] leading-none">
             SOFTWARE
           </h1>
-          <h1 className="text-[150px] md:text-[200px] leading-none">SIMPLE</h1>
+          <h1 className="text-[150px] md:text-[200px] leading-none text-[#670A0D]">SIMPLE</h1>
         </div>
       </div>
     </div>
