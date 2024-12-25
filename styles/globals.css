@@ -34,3 +34,8 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
+.my-bigger-bullets li::marker {
+    font-size: 1.5em;
+    color: #670A0D;
+  }
