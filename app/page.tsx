@@ -6,54 +6,6 @@ import { FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
 import Image from "next/image";
 import Logo from "../Images/Logo.svg";
 
-/** 
- * Small component that flips between:
- *  - Front side: Envelope icon
- *  - Back side: Your email address
- */
-function EmailFlip() {
-  const [flipped, setFlipped] = useState(false);
-
-  return (
-    <div
-      className="relative cursor-pointer"
-      style={{
-        width: "120px",
-        height: "120px",
-        perspective: "1000px",
-      }}
-      // Toggle the flip on click
-      onClick={() => setFlipped(!flipped)}
-    >
-      <motion.div
-        className="absolute w-full h-full"
-        style={{ transformStyle: "preserve-3d" }}
-        // Rotate on Y-axis by 180 degrees if flipped
-        animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-      >
-        {/* FRONT Side (Envelope icon) */}
-        <div className="absolute w-full h-full flex items-center justify-center bg-[#3d3d3d] text-white rounded-xl backface-hidden">
-          <FaEnvelope size={60} />
-        </div>
-
-        {/* BACK Side (Email text). Rotated 180deg so it's hidden behind the front initially. */}
-        <div
-          className="absolute w-full h-full flex items-center justify-center bg-[#3d3d3d] text-white rounded-xl backface-hidden"
-          style={{ transform: "rotateY(180deg)" }}
-        >
-          <a
-            href="mailto:YourEmail@example.com"
-            className="text-xl hover:underline"
-          >
-            YourEmail@example.com
-          </a>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
 export default function Home() {
   // Track whether we're showing the big headings or the “Skills” panel
   const [showSkills, setShowSkills] = useState(false);
@@ -79,12 +31,12 @@ export default function Home() {
       {/* Desktop Content */}
       <div className="hidden md:flex h-full w-full">
         {/* LEFT SECTION (Always visible, never moves) */}
-        <div className="relative w-[35%] h-full px-8 py-12 overflow-hidden items-center">
+        <div className="relative w-[35%] h-full px-8 py-12 overflow-hidden items-center justify-center">
           {/* Logo as a button to return to main page */}
           <Image
             src={Logo}
             alt="Logo"
-            className="w-36 h-36 border-2 border-[#670A0D] rounded-xl cursor-pointer"
+            className="w-24 h-24 border-2 border-[#670A0D] rounded-xl cursor-pointer"
             onClick={goHome}
           />
 
@@ -124,7 +76,7 @@ export default function Home() {
         </div>
 
         {/* RIGHT SECTION (Animated content) */}
-        <div className="relative w-[65%] h-full flex items-center justify-center overflow-hidden">
+        <div className="relative w-[65%] h-full flex items-center justify-center md:overflow-scroll lg:overflow-clip hide-scrollbar">
           <AnimatePresence mode="wait">
             {/* If NOT showing skills/contact, display big headings */}
             {!showSkills && !showContact && (
@@ -156,7 +108,7 @@ export default function Home() {
                 key="skillsContent"
                 initial={{ y: 0, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "-100%", opacity: 0 }}
+                exit={{ y: "100%", opacity: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
               >
@@ -254,7 +206,7 @@ export default function Home() {
                 key="contactContent"
                 initial={{ y: 0, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "-100%", opacity: 0 }}
+                exit={{ y: "100%", opacity: 0 }}
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
               >
@@ -292,10 +244,17 @@ export default function Home() {
                     </footer>
                   </a>
 
-                  {/* Flip Envelope: On page load, envelope icon. Click -> Email */}
-                  <footer className="flex items-center justify-center bg-[#3d3d3d] p-16 mb-8 rounded-xl">
-                    <EmailFlip />
-                  </footer>
+                  {/* Email Link */}
+                  
+                  <a
+                    href="mailto:iharrison0626@gmail.com"
+                    className="text-xl hover:underline"
+                    >
+                      <footer className="flex items-center justify-center space-x-4 bg-[#3d3d3d] p-16 mb-8 rounded-xl">
+                        <FaEnvelope size={60}/>
+                     </footer>
+                    </a>
+               
                 </div>
               </motion.div>
             )}
