@@ -105,103 +105,119 @@ export default function Home() {
 
             {/* If showing SKILLS, slide in from the top */}
             {showSkills && !showContact && (
+              <motion.div
+                key="skillsContent"
+                initial={{ y: 0, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: "100%", opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
+              >
+                {/* --- SKILLS SECTION --- */}
+                <div className="w-full h-full flex-col flex mt-20 px-8">
+                  {/* Section Heading: bold */}
+                  <h1 className="text-4xl font-bold mb-4">Skills</h1>
 
-  <motion.div
-    key="skillsContent"
-    initial={{ y: 0, opacity: 0 }}
-    animate={{ y: 0, opacity: 1 }}
-    exit={{ y: "100%", opacity: 0 }}
-    transition={{ duration: 0.8, ease: "easeInOut" }}
-    className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
-  >
-    {/* --- SKILLS SECTION --- */}
-    <div className="w-full h-full flex-col flex mt-20 px-8">
-      <h1 className="text-4xl mb-4 font-bold">Skills</h1>
+                  {/* Main UL for Skills: smaller spacing so it doesn't overflow */}
+                  <ul className="list-[square] list-inside pl-6 space-y-4 marker:text-[#670A0D]">
+                    {/* Programming Languages */}
+                    <li className="text-xl leading-normal">
+                      <span className="font-bold">Programming Languages:</span>
+                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
+                        <li className="font-normal">
+                          Python <span className="text-gray-400">•</span> Java{" "}
+                          <span className="text-gray-400">•</span> JavaScript{" "}
+                          <span className="text-gray-400">•</span> HTML5{" "}
+                          <span className="text-gray-400">•</span> Arduino{" "}
+                          <span className="text-gray-400">•</span> React{" "}
+                          <span className="text-gray-400">•</span> React Native{" "}
+                          <span className="text-gray-400">•</span> TypeScript{" "}
+                          <span className="text-gray-400">•</span> SQL{" "}
+                          <span className="text-gray-400">•</span> Machine Language (LegV8){" "}
+                          <span className="text-gray-400">•</span> Ruby{" "}
+                          <span className="text-gray-400">•</span> Ruby on Rails{" "}
+                          <span className="text-gray-400">•</span> Swift
+                        </li>
+                      </ul>
+                    </li>
 
-      {/* Main UL for Skills: use a square bullet, reduced spacing */}
-      <ul className="list-[square] list-inside pl-6 space-y-4 marker:text-[#670A0D]">
-        {/* Programming Languages */}
-        <li className="text-xl leading-normal font-bold">
-          Programming Languages:
-          <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D] font-normal">
-            <li>
-              Python, Java, JavaScript, HTML5, Arduino, React, React Native,
-              TypeScript, SQL, Machine Language (LegV8), Ruby, Ruby on Rails, Swift
-            </li>
-          </ul>
-        </li>
+                    {/* Compliancy Experience */}
+                    <li className="text-xl leading-normal">
+                      <span className="font-bold">Compliancy Experience:</span>
+                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
+                        <li className="font-normal">
+                          HIPAA <span className="text-gray-400">•</span> ISO-27001{" "}
+                          <span className="text-gray-400">•</span> ISO-9001{" "}
+                          <span className="text-gray-400">•</span> PCI-DSS{" "}
+                          <span className="text-gray-400">•</span> CA Consumer Privacy Act{" "}
+                          <span className="text-gray-400">•</span> FDA-21{" "}
+                          <span className="text-gray-400">•</span> GDPR
+                        </li>
+                      </ul>
+                    </li>
 
-        {/* Compliancy Experience */}
-        <li className="text-xl leading-normal font-bold">
-          Compliancy Experience:
-          <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D] font-normal">
-            <li>
-              HIPAA, ISO-27001, ISO-9001, PCI-DSS, CA Consumer Privacy Act, FDA-21, GDPR
-            </li>
-          </ul>
-        </li>
+                    {/* Other Software */}
+                    <li className="text-xl leading-normal">
+                      <span className="font-bold">Other Software:</span>
+                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
+                        <li className="font-normal">
+                          3D Modeling <span className="text-gray-400">•</span> TinkerCad{" "}
+                          <span className="text-gray-400">•</span> Computer Programming{" "}
+                          <span className="text-gray-400">•</span> Geospatial Processing and Map Design{" "}
+                          <span className="text-gray-400">•</span> Database Management and Design
+                        </li>
+                      </ul>
+                    </li>
 
-        {/* Other Software */}
-        <li className="text-xl leading-normal font-bold">
-          Other Software:
-          <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D] font-normal">
-            <li>
-              3D Modeling, TinkerCad, Computer Programming,
-              Geospatial Processing and Map Design,
-              Database Management and Design
-            </li>
-          </ul>
-        </li>
+                    {/* Amazon AWS */}
+                    <li className="text-xl leading-normal">
+                      <span className="font-bold">Amazon AWS:</span>
+                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
+                        <li className="font-normal">
+                          3D Modeling <span className="text-gray-400">•</span> TinkerCad{" "}
+                          <span className="text-gray-400">•</span> Computer Programming{" "}
+                          <span className="text-gray-400">•</span> Geospatial Processing and Map Design{" "}
+                          <span className="text-gray-400">•</span> Database Management and Design
+                        </li>
+                      </ul>
+                    </li>
 
-        {/* Amazon AWS */}
-        <li className="text-xl leading-normal font-bold">
-          Amazon AWS:
-          <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D] font-normal">
-            <li>
-              3D Modeling, TinkerCad, Computer Programming,
-              Geospatial Processing and Map Design,
-              Database Management and Design
-            </li>
-          </ul>
-        </li>
+                    {/* Microsoft Defender */}
+                    <li className="text-xl leading-normal">
+                      <span className="font-bold">Microsoft Defender:</span>
+                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
+                        <li className="font-normal">
+                          Microsoft Defender for Endpoint{" "}
+                          <span className="text-gray-400">•</span> Microsoft Defender for Office 365{" "}
+                          <span className="text-gray-400">•</span> Microsoft Defender for Identity
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
 
-        {/* Microsoft Defender */}
-        <li className="text-xl leading-normal font-bold">
-          Microsoft Defender:
-          <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D] font-normal">
-            <li>
-              Microsoft Defender for Endpoint,
-              Microsoft Defender for Office 365,
-              Microsoft Defender for Identity
-            </li>
-          </ul>
-        </li>
-      </ul>
+                  <h1 className="my-8 w-full h-0.5 bg-[#670A0D]"></h1>
 
-      <h1 className="my-8 w-full h-0.5 bg-[#670A0D]"></h1>
-
-      {/* --- CERTIFICATIONS SECTION --- */}
-      <h1 className="text-4xl mb-4 font-bold">Certifications</h1>
-      <ul className="list-[square] list-inside pl-6 space-y-4 marker:text-[#670A0D]">
-        <li className="text-xl leading-normal font-bold">
-          CompTIA:
-          <ul className="list-disc list-inside pl-8 mt-2 space-y-1 font-normal marker:text-[#670A0D]">
-            <li>Security+</li>
-          </ul>
-        </li>
-        <li className="text-xl leading-normal font-bold">
-          Amazon AWS (Official Courses):
-          <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D] font-normal">
-            <li>Amazon AWS Cloud Foundations, Amazon AWS Security</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </motion.div>)}
-
-
-
-
+                  {/* --- CERTIFICATIONS SECTION --- */}
+                  <h1 className="text-4xl font-bold mb-4">Certifications</h1>
+                  <ul className="list-[square] list-inside pl-6 space-y-4 marker:text-[#670A0D]">
+                    <li className="text-xl leading-normal">
+                      <span className="font-bold">CompTIA:</span>
+                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
+                        <li className="font-normal">Security+</li>
+                      </ul>
+                    </li>
+                    <li className="text-xl leading-normal">
+                      <span className="font-bold">Amazon AWS (Official Courses):</span>
+                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
+                        <li className="font-normal">
+                          Amazon AWS Cloud Foundations <span className="text-gray-400">•</span> Amazon AWS Security
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+            )}
             {/* If showing CONTACT, slide in from the top */}
             {showContact && !showSkills && (
               <motion.div
