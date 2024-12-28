@@ -19,6 +19,7 @@ export default function Home() {
   };
 
   return (
+    <>
     <div className="flex h-screen w-screen bg-[#0C0004] text-white overflow-hidden">
       {/* Mobile Message */}
       <div className="block md:hidden flex-col flex items-center justify-center w-full h-full text-center p-4">
@@ -45,7 +46,7 @@ export default function Home() {
             Ian Harrison
           </h2>
           <p className="text-lg ml-[20%]">
-            Security Analyst, Penetration Tester, Developer
+            Security Analyst and Developer
           </p>
           <p className="mt-2 text-lg leading-relaxed max-w-sm ml-[20%]">
             Creating, Monitoring, Testing, and Securing software in Birmingham, Alabama.
@@ -262,6 +263,7 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
