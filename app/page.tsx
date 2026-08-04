@@ -11,11 +11,14 @@ import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import { PROFILE } from "./data/resume";
 
+// Order drives the nav, and also the order sections appear in the static HTML
+// for crawlers and no-JS visitors. Skills sits ahead of Projects deliberately —
+// it is the section that gets scanned first for this kind of role.
 const NAV = [
   { id: "home", label: "Home" },
   { id: "experience", label: "Experience" },
-  { id: "projects", label: "Projects" },
   { id: "skills", label: "Skills" },
+  { id: "projects", label: "Projects" },
   { id: "contact", label: "Contact" },
 ] as const;
 
