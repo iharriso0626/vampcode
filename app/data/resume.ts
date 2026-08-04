@@ -19,6 +19,10 @@ export const CONTACT = {
   linkedinHandle: "ian-harrison",
 };
 
+// Lives in public/. Generated from the content in this file, deliberately
+// without a phone number — the site is public and the PDF is downloadable.
+export const RESUME_PDF = "/Ian_Harrison_Resume.pdf";
+
 export type Job = {
   company: string;
   location: string;

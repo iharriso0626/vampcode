@@ -1,5 +1,10 @@
-import { FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
-import { CONTACT, PROFILE } from "../data/resume";
+import {
+  FaEnvelope,
+  FaFileDownload,
+  FaGithub,
+  FaLinkedin,
+} from "react-icons/fa";
+import { CONTACT, PROFILE, RESUME_PDF } from "../data/resume";
 import { SectionHeading } from "./ui";
 
 const LINKS = [
@@ -35,6 +40,24 @@ export default function Contact() {
         Please reach out with any questions about my work, or to discuss
         potential opportunities. Based in {PROFILE.location}.
       </p>
+
+      <a
+        href={RESUME_PDF}
+        download
+        className="group mb-4 flex items-center gap-4 border-l-2 border-blood bg-blood/15 p-4 transition-colors hover:bg-blood/30 focus-visible:bg-blood/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blood sm:gap-5 sm:p-5"
+      >
+        <FaFileDownload
+          className="shrink-0 text-white/80 transition-colors group-hover:text-white"
+          size={32}
+          aria-hidden="true"
+        />
+        <div className="min-w-0">
+          <p className="text-xs uppercase tracking-widest text-white/50">
+            Resume
+          </p>
+          <p className="truncate text-base sm:text-lg">Download PDF</p>
+        </div>
+      </a>
 
       <div className="space-y-4">
         {LINKS.map(({ label, value, href, Icon, external }) => (
