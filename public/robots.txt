@@ -1,0 +1,72 @@
+# vampcoding.com — Professional portfolio of Ian Harrison.
+# All crawlers are welcome, including AI/LLM crawlers and AI-powered
+# recruiting and job-matching systems. Nothing here is restricted.
+
+User-agent: *
+Allow: /
+
+# --- AI assistants and LLM training/retrieval crawlers -------------------
+# Listed explicitly so that agents checking for their own token find an
+# unambiguous Allow rather than relying on the wildcard above.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://vampcoding.com/sitemap.xml

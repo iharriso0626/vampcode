@@ -1,16 +1,16 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        // Site palette — keep these in sync with the CSS variables in globals.css
+        ink: "#0C0004",
+        blood: {
+          DEFAULT: "#670A0D",
+          light: "#B8474B",
+        },
       },
     },
   },

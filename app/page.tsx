@@ -1,286 +1,147 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Logo from "../Images/Logo.svg";
+import Contact from "./components/Contact";
+import Experience from "./components/Experience";
+import Hero from "./components/Hero";
+import Skills from "./components/Skills";
+import { PROFILE } from "./data/resume";
+
+const NAV = [
+  { id: "home", label: "Home" },
+  { id: "experience", label: "Experience" },
+  { id: "skills", label: "Skills" },
+  { id: "contact", label: "Contact" },
+] as const;
+
+type SectionId = (typeof NAV)[number]["id"];
+
+const isSectionId = (value: string): value is SectionId =>
+  NAV.some((item) => item.id === value);
+
+const PANELS: Record<SectionId, React.ReactNode> = {
+  home: <Hero />,
+  experience: <Experience />,
+  skills: <Skills />,
+  contact: <Contact />,
+};
 
 export default function Home() {
-  // Track whether we're showing the big headings or the “Skills” panel
-  const [showSkills, setShowSkills] = useState(false);
-  // Track whether we're showing the "Contact Me" panel
-  const [showContact, setShowContact] = useState(false);
+  const [section, setSection] = useState<SectionId>("home");
+  const panelRef = useRef<HTMLElement>(null);
 
-  // Resets everything back to main page
-  const goHome = () => {
-    setShowSkills(false);
-    setShowContact(false);
+  // Sections are shareable as #experience / #skills / #contact. Applied after
+  // mount so the prerendered HTML and the first client render still match.
+  useEffect(() => {
+    const applyHash = () => {
+      const hash = window.location.hash.slice(1);
+      setSection(isSectionId(hash) ? hash : "home");
+    };
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    return () => window.removeEventListener("hashchange", applyHash);
+  }, []);
+
+  // Each panel is its own "page", so start it at the top rather than inheriting
+  // the scroll position of the section the visitor just left.
+  const goTo = (id: SectionId) => {
+    setSection(id);
+    const { pathname, search } = window.location;
+    window.history.replaceState(
+      null,
+      "",
+      id === "home" ? pathname + search : `#${id}`,
+    );
+    panelRef.current?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <>
-    <div className="flex h-screen w-screen bg-[#0C0004] text-white overflow-hidden">
-      {/* Mobile Message */}
-      <div className="block md:hidden flex-col flex items-center justify-center w-full h-full text-center p-4">
-        <p className="text-lg">
-          Sorry, this website is not currently optimized for Mobile use, thank you!
-        </p>
-        <p>- Ian Harrison</p>
-      </div>
-
-      {/* Desktop Content */}
-      <div className="hidden md:flex h-full w-full">
-        {/* LEFT SECTION (Always visible, never moves) */}
-        <div className="relative w-[35%] h-full px-8 py-12 overflow-hidden items-center justify-center">
-          {/* Logo as a button to return to main page */}
-          <Image
-            src={Logo}
-            alt="Logo"
-            className="w-24 h-24 border-2 border-[#670A0D] rounded-xl cursor-pointer"
-            onClick={goHome}
-          />
-
-          {/* Main info */}
-          <h2 className="text-2xl mb-6 mt-[30%] ml-[20%] font-semibold uppercase tracking-wider">
-            Ian Harrison
-          </h2>
-          <p className="text-lg ml-[20%]">
-            Security Analyst and Developer
-          </p>
-          <p className="mt-2 text-lg leading-relaxed max-w-sm ml-[20%]">
-            Creating, Monitoring, Testing, and Securing software in Birmingham, Alabama.
-          </p>
-
-          {/* Button SECTION */}
+    <div className="flex min-h-[100dvh] flex-col bg-ink text-white xl:h-[100dvh] xl:flex-row xl:overflow-hidden">
+      {/* IDENTITY RAIL — a header when stacked, a fixed left column at xl.
+          The split needs xl rather than lg: at ~1024px the 35% rail is too
+          narrow to hold the nav on one row. */}
+      <header className="shrink-0 px-6 pb-6 pt-8 sm:px-10 xl:flex xl:h-full xl:w-[35%] xl:flex-col xl:justify-center xl:px-12 xl:py-12">
+        {/* Identity lockup — the V mark reads as a monogram beside the name
+            rather than a floating tile above it. */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => goTo("home")}
+            aria-label="Back to home"
+            className="shrink-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blood"
+          >
+            <Image
+              src={Logo}
+              alt=""
+              className="h-14 w-14 cursor-pointer transition-opacity hover:opacity-80 sm:h-16 sm:w-16"
+            />
+          </button>
           <div>
-            <button
-              className="mt-4 ml-[20%] bg-[#670A0D] text-white py-2 px-4 rounded-lg"
-              onClick={() => {
-                setShowSkills(true);
-                setShowContact(false);
-              }}
-            >
-              Experience/Skills
-            </button>
-
-            <button
-              className="mt-4 ml-[20%] bg-[#670A0D] text-white py-2 px-4 rounded-lg"
-              onClick={() => {
-                setShowContact(true);
-                setShowSkills(false);
-              }}
-            >
-              Contact Me
-            </button>
+            <h1 className="text-2xl font-semibold uppercase tracking-wider sm:text-3xl">
+              {PROFILE.name}
+            </h1>
+            <p className="mt-1 text-base text-blood-light sm:text-lg">
+              {PROFILE.role}
+            </p>
           </div>
         </div>
 
-        {/* RIGHT SECTION (Animated content) */}
-        <div className="relative w-[65%] h-full flex items-center justify-center md:overflow-scroll lg:overflow-clip hide-scrollbar">
-          <AnimatePresence mode="wait">
-            {/* If NOT showing skills/contact, display big headings */}
-            {!showSkills && !showContact && (
-              <motion.div
-                key="mainContent"
-                initial={{ y: 0, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "100%", opacity: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
+        <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/70 sm:text-base">
+          {PROFILE.tagline}
+        </p>
+
+        {/* NAVIGATION */}
+        <nav className="mt-6 flex flex-wrap gap-2 sm:gap-3 xl:mt-8 xl:gap-2">
+          {NAV.map(({ id, label }) => {
+            const active = section === id;
+            return (
+              <button
+                key={id}
+                onClick={() => goTo(id)}
+                aria-current={active ? "page" : undefined}
+                className={`rounded-lg border px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blood sm:px-4 sm:text-base xl:px-3 xl:text-sm ${
+                  active
+                    ? "border-blood bg-blood text-white"
+                    : "border-blood/50 bg-transparent text-white/80 hover:border-blood hover:bg-blood/20 hover:text-white"
+                }`}
               >
-                <div className="text-left space-y-2">
-                  <h1 className="text-[150px] md:text-[200px] leading-none font-light">
-                    SECURITY
-                  </h1>
-                  <h1 className="text-[150px] md:text-[200px] leading-none font-light">
-                    SOFTWARE
-                  </h1>
-                  <h1 className="text-[150px] md:text-[200px] leading-none font-light text-[#670A0D]">
-                    SIMPLE
-                  </h1>
-                </div>
-              </motion.div>
-            )}
+                {label}
+              </button>
+            );
+          })}
+        </nav>
+      </header>
 
-            {/* If showing SKILLS, slide in from the top */}
-            {showSkills && !showContact && (
-              <motion.div
-                key="skillsContent"
-                initial={{ y: 0, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "100%", opacity: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
-              >
-                {/* --- SKILLS SECTION --- */}
-                <div className="w-full h-full flex-col flex mt-20 px-8">
-                  {/* Section Heading: bold */}
-                  <h1 className="text-4xl font-bold mb-4">Skills</h1>
-
-                  {/* Main UL for Skills: smaller spacing so it doesn't overflow */}
-                  <ul className="list-[square] list-inside pl-6 space-y-4 marker:text-[#670A0D]">
-                    {/* Programming Languages */}
-                    <li className="text-xl leading-normal">
-                      <span className="font-bold">Programming Languages:</span>
-                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
-                        <li className="font-normal">
-                          Python <span className="text-gray-400">•</span> Java{" "}
-                          <span className="text-gray-400">•</span> JavaScript{" "}
-                          <span className="text-gray-400">•</span> HTML5{" "}
-                          <span className="text-gray-400">•</span> Arduino{" "}
-                          <span className="text-gray-400">•</span> React{" "}
-                          <span className="text-gray-400">•</span> React Native{" "}
-                          <span className="text-gray-400">•</span> TypeScript{" "}
-                          <span className="text-gray-400">•</span> SQL{" "}
-                          <span className="text-gray-400">•</span> Machine Language (LegV8){" "}
-                          <span className="text-gray-400">•</span> Ruby{" "}
-                          <span className="text-gray-400">•</span> Ruby on Rails{" "}
-                          <span className="text-gray-400">•</span> Swift
-                        </li>
-                      </ul>
-                    </li>
-
-                    {/* Compliancy Experience */}
-                    <li className="text-xl leading-normal">
-                      <span className="font-bold">Compliancy Experience:</span>
-                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
-                        <li className="font-normal">
-                          HIPAA <span className="text-gray-400">•</span> ISO-27001{" "}
-                          <span className="text-gray-400">•</span> ISO-9001{" "}
-                          <span className="text-gray-400">•</span> PCI-DSS{" "}
-                          <span className="text-gray-400">•</span> CA Consumer Privacy Act{" "}
-                          <span className="text-gray-400">•</span> FDA-21{" "}
-                          <span className="text-gray-400">•</span> GDPR
-                        </li>
-                      </ul>
-                    </li>
-
-                    {/* Other Software */}
-                    <li className="text-xl leading-normal">
-                      <span className="font-bold">Other Software:</span>
-                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
-                        <li className="font-normal">
-                          3D Modeling <span className="text-gray-400">•</span> TinkerCad{" "}
-                          <span className="text-gray-400">•</span> Computer Programming{" "}
-                          <span className="text-gray-400">•</span> Geospatial Processing and Map Design{" "}
-                          <span className="text-gray-400">•</span> Database Management and Design
-                        </li>
-                      </ul>
-                    </li>
-
-                    {/* Amazon AWS */}
-                    <li className="text-xl leading-normal">
-                      <span className="font-bold">Amazon AWS:</span>
-                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
-                        <li className="font-normal">
-                          3D Modeling <span className="text-gray-400">•</span> TinkerCad{" "}
-                          <span className="text-gray-400">•</span> Computer Programming{" "}
-                          <span className="text-gray-400">•</span> Geospatial Processing and Map Design{" "}
-                          <span className="text-gray-400">•</span> Database Management and Design
-                        </li>
-                      </ul>
-                    </li>
-
-                    {/* Microsoft Defender */}
-                    <li className="text-xl leading-normal">
-                      <span className="font-bold">Microsoft Defender:</span>
-                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
-                        <li className="font-normal">
-                          Microsoft Defender for Endpoint{" "}
-                          <span className="text-gray-400">•</span> Microsoft Defender for Office 365{" "}
-                          <span className="text-gray-400">•</span> Microsoft Defender for Identity
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-
-                  <h1 className="my-8 w-full h-0.5 bg-[#670A0D]"></h1>
-
-                  {/* --- CERTIFICATIONS SECTION --- */}
-                  <h1 className="text-4xl font-bold mb-4">Certifications</h1>
-                  <ul className="list-[square] list-inside pl-6 space-y-4 marker:text-[#670A0D]">
-                    <li className="text-xl leading-normal">
-                      <span className="font-bold">CompTIA:</span>
-                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
-                        <li className="font-normal">Security+</li>
-                      </ul>
-                    </li>
-                    <li className="text-xl leading-normal">
-                      <span className="font-bold">Amazon AWS (Official Courses):</span>
-                      <ul className="list-disc list-inside pl-8 mt-2 space-y-1 marker:text-[#670A0D]">
-                        <li className="font-normal">
-                          Amazon AWS Cloud Foundations <span className="text-gray-400">•</span> Amazon AWS Security
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </div>
-              </motion.div>
-            )}
-            {/* If showing CONTACT, slide in from the top */}
-            {showContact && !showSkills && (
-              <motion.div
-                key="contactContent"
-                initial={{ y: 0, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "100%", opacity: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="absolute top-0 left-0 w-full h-full flex items-center justify-center"
-              >
-                {/* --- CONTACT SECTION --- */}
-                <div className="w-full h-full flex-col flex mt-20 px-8">
-                  <h1 className="text-4xl mb-4">Contact Me</h1>
-                  <p className="text-lg mb-8">
-                    Please reach out if you have any questions about my work,
-                    or to discuss potential opportunities.
-                  </p>
-
-                  {/* GitHub Link */}
-                  <a
-                    href="https://github.com/iharriso0626"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white hover:text-gray-300"
-                    aria-label="Visit my GitHub Profile"
-                  >
-                    <footer className="flex items-center justify-center space-x-4 bg-gray-800 p-16 mb-8 rounded-xl">
-                      <FaGithub size={60} />
-                    </footer>
-                  </a>
-
-                  {/* LinkedIn Link */}
-                  <a
-                    href="https://www.linkedin.com/in/ian-harrison-3774ab224/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white hover:text-gray-300"
-                    aria-label="Visit my LinkedIn Page"
-                  >
-                    <footer className="flex items-center justify-center space-x-4 bg-[#0a66c2] p-16 mb-8 rounded-xl">
-                      <FaLinkedin size={60} />
-                    </footer>
-                  </a>
-
-                  {/* Email Link */}
-                  
-                  <a
-                    href="mailto:iharrison0626@gmail.com"
-                    className="text-xl hover:underline"
-                    >
-                      <footer className="flex items-center justify-center space-x-4 bg-[#3d3d3d] p-16 mb-8 rounded-xl">
-                        <FaEnvelope size={60}/>
-                     </footer>
-                    </a>
-               
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+      {/* CONTENT PANEL */}
+      <main
+        ref={panelRef}
+        className="hide-scrollbar flex-1 overflow-y-auto px-6 pb-16 pt-4 sm:px-10 xl:h-full xl:w-[65%] xl:px-12 xl:py-16"
+      >
+        {/* Every panel stays mounted so the whole resume ships in the static
+            HTML — search engines and AI crawlers that do not click the tabs
+            still read all of it. Only the active panel is displayed. */}
+        {NAV.map(({ id, label }) => {
+          const active = section === id;
+          return (
+            <section key={id} hidden={!active} aria-label={label}>
+              {active ? (
+                <motion.div
+                  initial={{ y: 24, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.45, ease: "easeInOut" }}
+                >
+                  {PANELS[id]}
+                </motion.div>
+              ) : (
+                PANELS[id]
+              )}
+            </section>
+          );
+        })}
+      </main>
     </div>
-    </>
   );
 }
-

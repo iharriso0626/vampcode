@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VampCoding
+
+Professional portfolio of Ian Harrison — Security Analyst & Developer.
+
+Built with [Next.js](https://nextjs.org) (App Router), Tailwind CSS, and Framer
+Motion. Deployed as a fully static site (`output: "export"`) to
+[vampcoding.com](https://vampcoding.com).
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # static export into ./out
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Editing the content
 
-## Learn More
+All resume content lives in [`app/data/resume.ts`](app/data/resume.ts) — profile,
+contact links, work experience, education, skills, and certifications. Edit that
+file rather than the components; the panels, the `#skills` / `#experience` deep
+links, and the schema.org structured data all read from it.
 
-To learn more about Next.js, take a look at the following resources:
+The deployed origin is set once in [`app/data/site.ts`](app/data/site.ts) and is
+used for metadata, the canonical URL, the sitemap, and structured data.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Layout
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Breakpoint | Layout |
+| --- | --- |
+| `< xl` (1280px) | Stacked — identity header above, content panel below |
+| `>= xl` | Split — fixed 35% identity rail, 65% scrolling content panel |
 
-## Deploy on Vercel
+Sections are deep-linkable: `/#experience`, `/#skills`, `/#contact`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Crawlability
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The site is meant to be readable by search engines and AI/LLM crawlers,
+including AI-powered recruiting systems:
+
+- Every panel stays mounted in the DOM (inactive ones use the `hidden`
+  attribute), so the full resume ships in the prerendered HTML rather than
+  appearing only after a tab is clicked.
+- [`public/robots.txt`](public/robots.txt) allows all crawlers and names the
+  major AI user-agents explicitly.
+- [`app/components/StructuredData.tsx`](app/components/StructuredData.tsx) emits
+  a schema.org `Person` graph covering work history, skills, and credentials.
+- `app/sitemap.ts` generates `/sitemap.xml`.
+
+## Theme
+
+Palette and font are defined in [`tailwind.config.ts`](tailwind.config.ts) and
+[`app/globals.css`](app/globals.css):
+
+- `ink` `#0C0004` — background
+- `blood` `#670A0D` — accent, `blood-light` `#B8474B` for accent text
+- Cinzel (Google Fonts), loaded in `app/layout.tsx`
