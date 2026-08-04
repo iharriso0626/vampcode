@@ -1,0 +1,88 @@
+# Apache/LiteSpeed config for HostGator shared hosting.
+# Lives in public/ so it is copied into out/ on every `npm run build`.
+#
+# This site is 100% static. There is no PHP, no database, and no admin panel,
+# so everything below assumes nothing needs to execute server-side.
+
+# --- Which file serves at "/" ---------------------------------------------
+# Explicit, so a stray index.php can never take over the homepage again.
+DirectoryIndex index.html
+
+ErrorDocument 404 /404.html
+
+# No directory listings if a folder has no index file.
+Options -Indexes
+
+# --- Block dotfiles -------------------------------------------------------
+# .htaccess, editor swap files, a stray .env, etc.
+#
+# FilesMatch tests the final filename, not the full path, so AutoSSL's
+# challenge files at /.well-known/acme-challenge/<token> are unaffected —
+# <token> does not start with a dot. Certificate issuance still works.
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+# --- Block files that should never be served ------------------------------
+# Deploy archives, backups, dumps. Nothing here is meant to be downloadable.
+<FilesMatch "\.(tar|tar\.gz|tgz|zip|bak|sql|log|ini|sh)$">
+  Require all denied
+</FilesMatch>
+
+# Nothing server-side should ever execute on this host.
+<FilesMatch "\.(php|php[0-9]|phtml|pl|py|cgi)$">
+  Require all denied
+</FilesMatch>
+
+# --- HTTPS + non-www ------------------------------------------------------
+# Canonical is https://vampcoding.com (no www).
+#
+# KEEP COMMENTED until DNS resolves AND the SSL certificate is active.
+# Enabling either rule before then redirects visitors to a hostname that does
+# not answer, which takes the site down with no obvious cause.
+#
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTPS} off
+#   RewriteRule ^(.*)$ https://vampcoding.com/$1 [R=301,L]
+#   RewriteCond %{HTTP_HOST} ^www\. [NC]
+#   RewriteRule ^(.*)$ https://vampcoding.com/$1 [R=301,L]
+# </IfModule>
+
+# --- Security headers -----------------------------------------------------
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Permissions-Policy "geolocation=(), camera=(), microphone=(), interest-cohort=()"
+
+  # HSTS — only enable once https://vampcoding.com is confirmed working.
+  # Browsers cache this aggressively; turning it on too early locks visitors
+  # out of the site until max-age expires.
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# --- Compression ----------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- Caching --------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Filenames under /_next/static/ carry a content hash, so a new build emits
+  # new filenames. Safe to cache for a year.
+  <FilesMatch "\.(js|css|woff2)$">
+    ExpiresDefault "access plus 1 year"
+    Header set Cache-Control "public, immutable"
+  </FilesMatch>
+
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
+
+  # HTML must revalidate or visitors keep seeing the previous deploy.
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
