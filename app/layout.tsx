@@ -15,7 +15,9 @@ const description = `Professional portfolio of ${PROFILE.name} — ${PROFILE.rol
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "VampCoding",
+  // Leads with the name and role because that is what people search for; the
+  // brand trails so it still reads as VampCoding.
+  title: `${PROFILE.name} — ${PROFILE.role} | VampCoding`,
   description,
   alternates: {
     canonical: "/",
