@@ -23,6 +23,83 @@ export const CONTACT = {
 // without a phone number — the site is public and the PDF is downloadable.
 export const RESUME_PDF = "/Ian_Harrison_Resume.pdf";
 
+export type Project = {
+  name: string;
+  summary: string;
+  bullets: string[];
+  tech: string[];
+};
+
+// Written for a public audience: no project identifiers, service names, flow
+// IDs, internal paths, or operational figures.
+export const PROJECTS: Project[] = [
+  {
+    name: "Automation Toolkit",
+    summary:
+      "A desktop automation hub for an insurance brokerage — a system-tray app paired with a browser extension, consolidating form autofill, macro recording, and AI assistance into a single tool.",
+    bullets: [
+      "Built the desktop application in Tauri with a Rust backend and a React + TypeScript frontend, paired with a Manifest V3 Chrome extension that bridges to the browser over a local WebSocket.",
+      "Implemented Microsoft Entra sign-in using OAuth 2.0 with PKCE, storing tokens in the Windows Credential Manager rather than on disk, with silent refresh so users never re-authenticate.",
+      "Shipped spreadsheet-driven form autofill, record/edit/replay browser macros, embedded AI chat, and a self-updating release channel.",
+    ],
+    tech: [
+      "Rust",
+      "Tauri",
+      "React",
+      "TypeScript",
+      "Chrome MV3",
+      "OAuth 2.0 PKCE",
+      "Microsoft Entra",
+      "WebSocket",
+      "Cloud Run",
+    ],
+  },
+  {
+    name: "Natural-Language Data Lake Access",
+    summary:
+      "An MCP server letting non-technical staff query the company data warehouse in plain English — without ever holding database credentials.",
+    bullets: [
+      "Deployed a Model Context Protocol server on Cloud Run that translates natural-language questions into SQL against BigQuery and returns readable answers.",
+      "Designed so no credentials live on user machines: authentication is centralized through a dedicated service account, keeping access auditable and revocable.",
+      "Paired with a second MCP server providing read-only infrastructure visibility — service status, logs, and function inventory.",
+    ],
+    tech: ["BigQuery", "Cloud Run", "MCP", "Python", "Node.js", "GCP IAM"],
+  },
+  {
+    name: "Producer Budget Application",
+    summary:
+      "A company-wide annual revenue-budgeting app that replaced a spreadsheet process with a guided form and validated submissions.",
+    bullets: [
+      "Built as a Power Apps canvas app on Dataverse, with Power Automate flows handling data hydration from BigQuery and submission processing.",
+      "Live-calculated metrics — recurring versus non-recurring growth, projected new business, budgeted revenue — update as users type, with per-account completion tracking.",
+      "Submissions export as structured payloads and return to the user as a downloadable record.",
+    ],
+    tech: [
+      "Power Apps",
+      "Dataverse",
+      "Power Automate",
+      "Power FX",
+      "BigQuery",
+    ],
+  },
+  {
+    name: "Support Ticket Routing Analysis",
+    summary:
+      "An analysis of seven months of internal support tickets to determine how much of the triage queue could be automated — and where automation was not worth it.",
+    bullets: [
+      "Analyzed resolved tickets to derive deterministic routing rules mapping ticket category to the correct agent.",
+      "Found that a simple lookup table covered the majority of tickets at high accuracy, with no AI required.",
+      "Recommended against adding an AI layer: it would have touched only a small ambiguous slice at meaningfully higher cost and complexity. Surfaced the remaining unowned categories as a decision for leadership.",
+    ],
+    tech: [
+      "Python",
+      "Data Analysis",
+      "Freshservice",
+      "Workflow Automation",
+    ],
+  },
+];
+
 export type Job = {
   company: string;
   location: string;

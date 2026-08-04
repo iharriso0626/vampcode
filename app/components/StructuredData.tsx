@@ -4,6 +4,7 @@ import {
   EDUCATION,
   EXPERIENCE,
   PROFILE,
+  PROJECTS,
   SKILLS,
 } from "../data/resume";
 import { SITE_URL } from "../data/site";
@@ -15,10 +16,12 @@ import { SITE_URL } from "../data/site";
  * and automated recruiting systems can parse the full work history, skills,
  * and credentials from here without interpreting the rendered layout.
  */
+const PERSON_ID = `${SITE_URL}/#person`;
+
 export default function StructuredData() {
-  const data = {
-    "@context": "https://schema.org",
+  const person = {
     "@type": "Person",
+    "@id": PERSON_ID,
     name: PROFILE.name,
     url: SITE_URL,
     jobTitle: PROFILE.role,
@@ -65,6 +68,23 @@ export default function StructuredData() {
         name: cert.issuer,
       },
     })),
+  };
+
+  // Projects are separate CreativeWork nodes attributed back to the Person,
+  // rather than prose buried in the Person node, so a parser can enumerate
+  // them and read the tech stack off each one.
+  const projects = PROJECTS.map((project) => ({
+    "@type": "CreativeWork",
+    name: project.name,
+    abstract: project.summary,
+    description: project.bullets.join(" "),
+    keywords: project.tech.join(", "),
+    author: { "@id": PERSON_ID },
+  }));
+
+  const data = {
+    "@context": "https://schema.org",
+    "@graph": [person, ...projects],
   };
 
   return (
