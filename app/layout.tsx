@@ -50,11 +50,22 @@ export const metadata: Metadata = {
     description,
     url: SITE_URL,
     siteName: "VampCoding",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: `${PROFILE.name} — ${PROFILE.role}`,
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    // summary_large_image gives the full-width preview card rather than a
+    // thumbnail, which is what LinkedIn and Slack render from too.
+    card: "summary_large_image",
     title: `${PROFILE.name} — ${PROFILE.role}`,
     description,
+    images: ["/og.png"],
   },
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { MotionConfig, motion } from "framer-motion";
 import Image from "next/image";
 import Logo from "../Images/Logo.svg";
 import Contact from "./components/Contact";
@@ -60,6 +60,9 @@ export default function Home() {
   };
 
   return (
+    // reducedMotion="user" honours the OS "reduce motion" setting — panels
+    // still swap, they just skip the slide/fade.
+    <MotionConfig reducedMotion="user">
     <div className="flex min-h-[100dvh] flex-col bg-ink text-white xl:h-[100dvh] xl:flex-row xl:overflow-hidden">
       {/* IDENTITY RAIL — a header when stacked, a fixed left column at xl.
           The split needs xl rather than lg: at ~1024px the 35% rail is too
@@ -143,5 +146,6 @@ export default function Home() {
         })}
       </main>
     </div>
+    </MotionConfig>
   );
 }
