@@ -1,35 +1,42 @@
-import { CONTACT, EXPERIENCE, PROJECTS } from "../data/resume";
+import { EXPERIENCE, PROJECTS } from "../data/resume";
 
 type ReelItem = {
-  eyebrow: string;
   title: string;
   detail: string;
 };
 
+type ReelGroup = {
+  label: string;
+  items: ReelItem[];
+};
+
 // Pulled straight from the resume data so the reel can't drift out of sync
-// with the sections it's previewing. Order matches the nav: experience,
-// skills, projects, contact.
-const REEL: ReelItem[] = [
-  ...EXPERIENCE.map((job) => ({
-    eyebrow: "Experience",
-    title: job.title,
-    detail: `${job.company} · ${job.start} — ${job.end}`,
-  })),
+// with the sections it's previewing. Contact is left out — it's a short,
+// action-driven section that doesn't read well as a passing preview.
+const GROUPS: ReelGroup[] = [
   {
-    eyebrow: "Skills",
-    title: "Security, cloud, and full-stack",
-    detail:
-      "GCP and AWS, incident response, compliance frameworks, and the languages behind all of it.",
+    label: "Experience",
+    items: EXPERIENCE.map((job) => ({
+      title: job.title,
+      detail: `${job.company} · ${job.start} — ${job.end}`,
+    })),
   },
-  ...PROJECTS.map((project) => ({
-    eyebrow: "Projects",
-    title: project.name,
-    detail: project.summary,
-  })),
   {
-    eyebrow: "Contact",
-    title: "Get in touch",
-    detail: `${CONTACT.githubHandle} on GitHub, ${CONTACT.linkedinHandle} on LinkedIn.`,
+    label: "Skills",
+    items: [
+      {
+        title: "Security, cloud, and full-stack",
+        detail:
+          "GCP and AWS, incident response, compliance frameworks, and the languages behind all of it.",
+      },
+    ],
+  },
+  {
+    label: "Projects",
+    items: PROJECTS.map((project) => ({
+      title: project.name,
+      detail: project.summary,
+    })),
   },
 ];
 
@@ -56,18 +63,30 @@ export default function Hero() {
         aria-hidden="true"
         className="animate-reel motion-reduce:animate-none flex flex-col"
       >
-        {[...REEL, ...REEL].map((item, i) => (
-          <div key={i} className="border-b border-white/10 py-6">
-            <p className="text-xs uppercase tracking-[0.2em] text-blood-light">
-              {item.eyebrow}
-            </p>
-            <h2 className="mt-1 text-lg font-medium sm:text-xl">
-              {item.title}
+        {[...GROUPS, ...GROUPS].map((group, groupIndex) => (
+          <section key={groupIndex} className="pb-10 pt-6">
+            <h2 className="text-3xl font-semibold uppercase tracking-wide text-blood-light sm:text-4xl">
+              {group.label}
             </h2>
-            <p className="mt-1 max-w-xl text-sm leading-relaxed text-white/60">
-              {item.detail}
-            </p>
-          </div>
+            <div className="mt-5 flex flex-col gap-5">
+              {group.items.map((item, itemIndex) => (
+                <div
+                  key={itemIndex}
+                  className={
+                    itemIndex > 0 ? "border-t border-white/10 pt-5" : ""
+                  }
+                >
+                  <h3 className="text-lg font-medium sm:text-xl">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1 max-w-xl text-sm leading-relaxed text-white/60">
+                    {item.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-10 h-px w-full bg-blood" />
+          </section>
         ))}
       </div>
     </div>
