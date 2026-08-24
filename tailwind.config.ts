@@ -21,7 +21,10 @@ export default {
         },
       },
       animation: {
-        reel: "reel 32s linear infinite",
+        // Duration is tuned to content height, not a fixed "feel" — the full
+        // skill list (Hero.tsx) roughly triples the track length versus a
+        // one-line-per-section summary, so this scales with it.
+        reel: "reel 90s linear infinite",
       },
     },
   },

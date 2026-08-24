@@ -1,44 +1,79 @@
-import { EXPERIENCE, PROJECTS } from "../data/resume";
+import { EXPERIENCE, PROJECTS, SKILLS } from "../data/resume";
+import { Pill } from "./ui";
 
 type ReelItem = {
   title: string;
   detail: string;
 };
 
-type ReelGroup = {
-  label: string;
-  items: ReelItem[];
-};
+const EXPERIENCE_ITEMS: ReelItem[] = EXPERIENCE.map((job) => ({
+  title: job.title,
+  detail: `${job.company} · ${job.start} — ${job.end}`,
+}));
 
-// Pulled straight from the resume data so the reel can't drift out of sync
-// with the sections it's previewing. Contact is left out — it's a short,
-// action-driven section that doesn't read well as a passing preview.
-const GROUPS: ReelGroup[] = [
-  {
-    label: "Experience",
-    items: EXPERIENCE.map((job) => ({
-      title: job.title,
-      detail: `${job.company} · ${job.start} — ${job.end}`,
-    })),
-  },
-  {
-    label: "Skills",
-    items: [
-      {
-        title: "Security, cloud, and full-stack",
-        detail:
-          "GCP and AWS, incident response, compliance frameworks, and the languages behind all of it.",
-      },
-    ],
-  },
-  {
-    label: "Projects",
-    items: PROJECTS.map((project) => ({
-      title: project.name,
-      detail: project.summary,
-    })),
-  },
-];
+const PROJECT_ITEMS: ReelItem[] = PROJECTS.map((project) => ({
+  title: project.name,
+  detail: project.summary,
+}));
+
+const GROUP_HEADING =
+  "text-3xl font-bold uppercase tracking-wide text-blood-light sm:text-4xl";
+
+function ReelList({ items }: { items: ReelItem[] }) {
+  return (
+    <div className="mt-5 flex flex-col gap-5">
+      {items.map((item, i) => (
+        <div key={i} className={i > 0 ? "border-t border-white/10 pt-5" : ""}>
+          <h3 className="text-lg font-medium sm:text-xl">{item.title}</h3>
+          <p className="mt-1 max-w-xl text-sm leading-relaxed text-white/60">
+            {item.detail}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// One full pass through Experience, Skills, and Projects. Rendered twice
+// below so the loop point is invisible. Skills mirrors Skills.tsx exactly —
+// same category heading classes, same Pill component — rather than a
+// summarized blurb, since the ask here is the full skill list.
+function ReelPass() {
+  return (
+    <>
+      <section className="pb-10 pt-6">
+        <h2 className={GROUP_HEADING}>Experience</h2>
+        <ReelList items={EXPERIENCE_ITEMS} />
+        <div className="mt-10 h-px w-full bg-blood" />
+      </section>
+
+      <section className="pb-10 pt-6">
+        <h2 className={GROUP_HEADING}>Skills</h2>
+        <div className="mt-5 space-y-6">
+          {SKILLS.map((group) => (
+            <div key={group.title}>
+              <h3 className="mb-3 text-base font-bold uppercase tracking-wider text-white/90 sm:text-lg">
+                {group.title}
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <Pill key={item}>{item}</Pill>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-10 h-px w-full bg-blood" />
+      </section>
+
+      <section className="pb-10 pt-6">
+        <h2 className={GROUP_HEADING}>Projects</h2>
+        <ReelList items={PROJECT_ITEMS} />
+        <div className="mt-10 h-px w-full bg-blood" />
+      </section>
+    </>
+  );
+}
 
 export default function Hero() {
   return (
@@ -63,31 +98,8 @@ export default function Hero() {
         aria-hidden="true"
         className="animate-reel motion-reduce:animate-none flex flex-col"
       >
-        {[...GROUPS, ...GROUPS].map((group, groupIndex) => (
-          <section key={groupIndex} className="pb-10 pt-6">
-            <h2 className="text-3xl font-semibold uppercase tracking-wide text-blood-light sm:text-4xl">
-              {group.label}
-            </h2>
-            <div className="mt-5 flex flex-col gap-5">
-              {group.items.map((item, itemIndex) => (
-                <div
-                  key={itemIndex}
-                  className={
-                    itemIndex > 0 ? "border-t border-white/10 pt-5" : ""
-                  }
-                >
-                  <h3 className="text-lg font-medium sm:text-xl">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1 max-w-xl text-sm leading-relaxed text-white/60">
-                    {item.detail}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-10 h-px w-full bg-blood" />
-          </section>
-        ))}
+        <ReelPass />
+        <ReelPass />
       </div>
     </div>
   );
