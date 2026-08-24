@@ -1,22 +1,24 @@
-// The hero words are sized against the viewport, but on wide screens they sit
-// inside the 65% content column — hence the smaller vw factor at xl, which is
-// where the split layout kicks in. Without it "SOFTWARE" runs off the edge.
-const SIZE =
-  "text-[clamp(2.75rem,13vw,9rem)] xl:text-[clamp(3rem,7.5vw,10rem)]";
+import { PROFILE } from "../data/resume";
 
 export default function Hero() {
   return (
     // Centred against the panel's visible height. A percentage height would
     // resolve to auto here, since every ancestor is only min-height constrained.
-    <div className="flex min-h-[45vh] items-center xl:min-h-[calc(100dvh-8rem)]">
-      <div className="space-y-1 text-left sm:space-y-2">
-        {["SECURITY", "SOFTWARE"].map((word) => (
-          <h1 key={word} className={`${SIZE} font-light leading-none`}>
-            {word}
-          </h1>
-        ))}
-        <h1 className={`${SIZE} font-light leading-none text-blood`}>SIMPLE</h1>
-      </div>
+    // Name, role, and tagline already live in the identity rail (page.tsx),
+    // so this panel expands on them instead of repeating them.
+    <div className="flex min-h-[45vh] flex-col justify-center gap-4 xl:min-h-[calc(100dvh-8rem)]">
+      <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+        {PROFILE.location}
+      </p>
+      <h1 className="max-w-2xl text-[clamp(1.75rem,4vw,2.75rem)] font-medium leading-tight">
+        Security that holds up,{" "}
+        <span className="text-blood-light">software that ships.</span>
+      </h1>
+      <p className="max-w-md text-base leading-relaxed text-white/70">
+        I spend most days closing the gap between security policy and the
+        tools teams actually use — audits, automation, and the occasional
+        full-stack build.
+      </p>
     </div>
   );
 }
