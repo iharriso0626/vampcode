@@ -12,6 +12,17 @@ export default {
           light: "#B8474B",
         },
       },
+      keyframes: {
+        // Content is rendered twice back to back (see Hero.tsx), so scrolling
+        // exactly half the track loops seamlessly.
+        reel: {
+          from: { transform: "translateY(0)" },
+          to: { transform: "translateY(-50%)" },
+        },
+      },
+      animation: {
+        reel: "reel 32s linear infinite",
+      },
     },
   },
   plugins: [],

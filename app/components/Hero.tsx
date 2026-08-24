@@ -1,24 +1,75 @@
-import { PROFILE } from "../data/resume";
+import { CONTACT, EXPERIENCE, PROJECTS } from "../data/resume";
+
+type ReelItem = {
+  eyebrow: string;
+  title: string;
+  detail: string;
+};
+
+// Pulled straight from the resume data so the reel can't drift out of sync
+// with the sections it's previewing. Order matches the nav: experience,
+// skills, projects, contact.
+const REEL: ReelItem[] = [
+  ...EXPERIENCE.map((job) => ({
+    eyebrow: "Experience",
+    title: job.title,
+    detail: `${job.company} · ${job.start} — ${job.end}`,
+  })),
+  {
+    eyebrow: "Skills",
+    title: "Security, cloud, and full-stack",
+    detail:
+      "GCP and AWS, incident response, compliance frameworks, and the languages behind all of it.",
+  },
+  ...PROJECTS.map((project) => ({
+    eyebrow: "Projects",
+    title: project.name,
+    detail: project.summary,
+  })),
+  {
+    eyebrow: "Contact",
+    title: "Get in touch",
+    detail: `${CONTACT.githubHandle} on GitHub, ${CONTACT.linkedinHandle} on LinkedIn.`,
+  },
+];
 
 export default function Hero() {
   return (
-    // Centred against the panel's visible height. A percentage height would
-    // resolve to auto here, since every ancestor is only min-height constrained.
-    // Name, role, and tagline already live in the identity rail (page.tsx),
-    // so this panel expands on them instead of repeating them.
-    <div className="flex min-h-[45vh] flex-col justify-center gap-4 xl:min-h-[calc(100dvh-8rem)]">
-      <p className="text-xs uppercase tracking-[0.2em] text-white/50">
-        {PROFILE.location}
-      </p>
-      <h1 className="max-w-2xl text-[clamp(1.75rem,4vw,2.75rem)] font-medium leading-tight">
-        Security that holds up,{" "}
-        <span className="text-blood-light">software that ships.</span>
-      </h1>
-      <p className="max-w-md text-base leading-relaxed text-white/70">
-        I spend most days closing the gap between security policy and the
-        tools teams actually use — audits, automation, and the occasional
-        full-stack build.
-      </p>
+    // Fixed to the panel's visible height rather than sized by content — the
+    // reel loops inside it instead of growing the page. Doubled below and
+    // animated exactly -50% so the loop point is invisible.
+    <div className="relative h-[45vh] overflow-hidden xl:h-[calc(100dvh-8rem)]">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-16 bg-gradient-to-b from-ink to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t from-ink to-transparent"
+      />
+
+      {/* Decorative preview of what's on the other tabs — the real content is
+          already reachable through the nav (and fully present for no-JS /
+          crawlers via the noscript override in layout.tsx), so this list is
+          hidden from assistive tech to avoid reading an endless duplicate. */}
+      <div
+        aria-hidden="true"
+        className="animate-reel motion-reduce:animate-none flex flex-col"
+      >
+        {[...REEL, ...REEL].map((item, i) => (
+          <div key={i} className="border-b border-white/10 py-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-blood-light">
+              {item.eyebrow}
+            </p>
+            <h2 className="mt-1 text-lg font-medium sm:text-xl">
+              {item.title}
+            </h2>
+            <p className="mt-1 max-w-xl text-sm leading-relaxed text-white/60">
+              {item.detail}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
